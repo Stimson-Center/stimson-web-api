@@ -8,13 +8,6 @@ runtime_config:
   python_version: 3
 threadsafe: yes
 # https://cloud.google.com/appengine/docs/flexible/custom-runtimes/configuring-your-app-with-app-yaml
-readiness_check:
-  path: "/readiness_check"
-  check_interval_sec: 5
-  timeout_sec: 4
-  failure_threshold: 2
-  success_threshold: 2
-  app_start_timeout_sec: 7200
 
 # [START handlers]
 handlers:
