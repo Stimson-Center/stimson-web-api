@@ -6,7 +6,7 @@ RESTful API for web page scraping and crawling
 Table of Contents
 =================
 
-   * [stimson-web-api backend](#stimson-web-curator-backend)
+   * [stimson-web-api backend](#stimson-web-api-backend)
    * [Table of Contents](#table-of-contents)
    * [Getting Started](#getting-started)
       * [Microsoft Windows](#microsoft-windows)
@@ -67,7 +67,7 @@ Get your credentials for Custom Search API
 Go to Credentials and get API key
 
 ```bash
-    cd ~/stimson-web-curator/backend
+    cd ~/stimson-web-api
     mkdir ~/.cloudshell
     touch ~/.cloudshell/no-python-warning
     touch .env
@@ -98,6 +98,6 @@ See DOCKER.md for more more details
 To debug docker container
 
 ```bash
-    docker run -p 8080:8080 -it --entrypoint=/bin/bash stimson-web-curator-api 
+    docker run -p 8080:8080 -it --entrypoint=/bin/bash stimson-web-api 
 ```
 
