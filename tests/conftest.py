@@ -1,6 +1,6 @@
 import logging
 import pytest
-from app.app.main import app
+from app.app.main import app, api
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -14,4 +14,6 @@ def fixture_directory():
 
 @pytest.fixture(scope='function')
 def app():
+    # api.testing = True
+    # client = api.test_client()
     return app
