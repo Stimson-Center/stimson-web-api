@@ -34,30 +34,34 @@ RUN touch /var/run/nginx.pid && \
 WORKDIR /app
 USER nginx
 
-RUN  pip install --upgrade pip
-RUN  pip install -r requirements.txt
-RUN  python -m spacy download zh_core_web_sm  # Chinese
-RUN  python -m spacy download da_core_news_sm # Danish
-RUN  python -m spacy download nl_core_news_sm # Dutch
-RUN  python -m spacy download en_core_web_sm  # English
-RUN  python -m spacy download fr_core_news_sm # French
-RUN  python -m spacy download de_core_news_sm # German
-RUN  python -m spacy download el_core_news_sm # Greek
-RUN  python -m spacy download ja_core_news_sm # Japanese
-RUN  python -m spacy download it_core_news_sm # Italian
-RUN  python -m spacy download lt_core_news_sm # Lithuanian
-RUN  python -m spacy download xx_ent_wiki_sm  # Multi-language
-RUN  python -m spacy download nb_core_news_sm # Norwegian Bokmål
-RUN  python -m spacy download pl_core_news_sm # Polish
-RUN  python -m spacy download pt_core_news_sm # Portuguese
-RUN  python -m spacy download ro_core_news_sm # Romanian
-RUN  python -m spacy download es_core_news_sm # Spanish
+RUN python -m venv /app/.venv
+RUN . /app/.venv/bin/activate && pip install --upgrade pip
+RUN . /app/.venv/bin/activate && pip install -r requirements.txt
+RUN . /app/.venv/bin/activate && python -m spacy download zh_core_web_sm  # Chinese
+RUN . /app/.venv/bin/activate && python -m spacy download da_core_news_sm # Danish
+RUN . /app/.venv/bin/activate && python -m spacy download nl_core_news_sm # Dutch
+RUN . /app/.venv/bin/activate && python -m spacy download en_core_web_sm  # English
+RUN . /app/.venv/bin/activate && python -m spacy download fr_core_news_sm # French
+RUN . /app/.venv/bin/activate && python -m spacy download de_core_news_sm # German
+RUN . /app/.venv/bin/activate && python -m spacy download el_core_news_sm # Greek
+RUN . /app/.venv/bin/activate && python -m spacy download ja_core_news_sm # Japanese
+RUN . /app/.venv/bin/activate && python -m spacy download it_core_news_sm # Italian
+RUN . /app/.venv/bin/activate && python -m spacy download lt_core_news_sm # Lithuanian
+RUN . /app/.venv/bin/activate && python -m spacy download xx_ent_wiki_sm  # Multi-language
+RUN . /app/.venv/bin/activate && python -m spacy download nb_core_news_sm # Norwegian Bokmål
+RUN . /app/.venv/bin/activate && python -m spacy download pl_core_news_sm # Polish
+RUN . /app/.venv/bin/activate && python -m spacy download pt_core_news_sm # Portuguese
+RUN . /app/.venv/bin/activate && python -m spacy download ro_core_news_sm # Romanian
+RUN . /app/.venv/bin/activate && python -m spacy download es_core_news_sm # Spanish
 
 
 # remove for security purposes
 # RUN rm /app/requirements.txt
 
+
 ## set environment variables
+# https://stackoverflow.com/questions/18417823/how-do-i-run-uwsgi-with-virtualenv
+ENV VIRTUAL_ENV /app/.venv
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 ENV FLASK_ENV production
