@@ -17,3 +17,6 @@ __pycache__
 Dockerfile
 .hg
 .svn
+docs/
+*.md
+run_*.sh
