@@ -28,10 +28,10 @@ log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 
 
-def set_cors():
+def set_cors(flask_app):
     # https://github.com/corydolphin/flask-cors/issues/201
     # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Headers
-    CORS(app,
+    CORS(flask_app,
          resources={r"/*": {"origins": "*"}},
          # origins=f"http://127.0.0.1:{port}",
          allow_headers=[
@@ -45,6 +45,16 @@ def set_cors():
          supports_credentials=True
          )
 
+def set_api(flask_app):
+    api = Api(flask_app)
+    api.add_resource(Health, '/')
+    api.add_resource(ArticleProcess, '/article')
+    api.add_resource(Countries, '/countries')
+    api.add_resource(FileTypes, '/filetypes')
+    api.add_resource(Languages, '/languages')
+    api.add_resource(PDF, '/pdf')
+    api.add_resource(Search, '/search')
+    api.add_resource(Share, '/share')
 
 # @app.before_request
 # def authorize_token():
@@ -68,16 +78,8 @@ class GetToken(Resource):
         # requests in Authorization header
 
 
-set_cors()
-api = Api(app)
-api.add_resource(Health, '/')
-api.add_resource(ArticleProcess, '/article')
-api.add_resource(Countries, '/countries')
-api.add_resource(FileTypes, '/filetypes')
-api.add_resource(Languages, '/languages')
-api.add_resource(PDF, '/pdf')
-api.add_resource(Search, '/search')
-api.add_resource(Share, '/share')
+set_cors(app)
+set_api(app)
 
 print("APP_SETUP")
 if __name__ == "__main__":

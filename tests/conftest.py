@@ -1,6 +1,7 @@
 import logging
 import pytest
-from app.app.main import app, api
+from flask import Flask
+from app.app.main import set_cors, set_api
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -14,6 +15,7 @@ def fixture_directory():
 
 @pytest.fixture(scope='function')
 def app():
-    # api.testing = True
-    # client = api.test_client()
+    app = Flask(__name__)
+    set_cors(app)
+    set_api(app)
     return app
