@@ -1,7 +1,10 @@
 import json
 import os
 import re
+import tempfile
+from pathlib import Path
 from io import BytesIO
+
 
 from flask import request, send_file
 from flask_restful import Resource
@@ -124,4 +127,17 @@ class PDF(Resource):
         pdf.write_section('URL', article.url)
         # get the pdf as an array of bytes
         buffer = pdf.output(dest='S')
-        return send_file(BytesIO(buffer), mimetype='application/pdf')
+        # works perfectly when called via requests in python, fails when called by axios in Javascript
+        # return send_file(BytesIO(buffer), mimetype='application/pdf')
+        # '/var/folders/g9/93n9wtsd3g7fjkh63dm2n57c0000gp/T/tmprb_xp4at.pdf'
+        fp = tempfile.NamedTemporaryFile(suffix='.pdf')
+        fp.write(buffer)
+        fp.flush()
+        fp.seek(0)
+        return send_file(
+            filename_or_fp=fp,
+            attachment_filename=Path(fp.name).name,
+            as_attachment=True,
+            mimetype='application/pdf'
+        )
+
