@@ -9,7 +9,7 @@ from scraper.article import DOWNLOADED, PARSED, NLPED
 # noinspection PyPackageRequirements
 from scraper.configuration import Configuration
 
-__title__ = 'stimson-web-scraper'
+__title__ = 'stimson-web-api'
 __author__ = 'Alan S. Cooper'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2020, The Stimson Center'

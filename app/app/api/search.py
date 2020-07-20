@@ -5,10 +5,9 @@ from dotenv import load_dotenv
 from flask import request
 from flask_restful import Resource
 from googleapiclient.discovery import build
+from .constants import countries, file_types, languages
 
-from ..constants import countries, file_types, languages
-
-__title__ = 'stimson-web-scraper'
+__title__ = 'stimson-web-api'
 __author__ = 'Alan S. Cooper'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2020, The Stimson Center'
@@ -44,17 +43,20 @@ __maintainer_email = "cooper@pobox.com"
 #   lr: string, The language restriction for the search results
 #     Allowed values
 #       lang_ar - Arabic
-#   orTerms: string, Provides additional search terms to check for in a document, where each document in the search results must contain at least one of the additional search terms
+#   orTerms: string, Provides additional search terms to check for in a document, where each document in the
+#   search results must contain at least one of the additional search terms
 #   num: integer, Number of search results to return
 #   relatedSite: string, Specifies that all search results should be pages that are related to the specified URL
-#   rights: string, Filters based on licensing. Supported values include: cc_publicdomain, cc_attribute, cc_sharealike, cc_noncommercial, cc_nonderived and combinations of these.
+#   rights: string, Filters based on licensing. Supported values include: cc_publicdomain, cc_attribute, cc_sharealike,
+#   cc_noncommercial, cc_nonderived and combinations of these.
 #   safe: string, Search safety level
 #     Allowed values
 #       high - Enables highest level of safe search filtering.
 #       medium - Enables moderate safe search filtering.
 #       off - Disables safe search filtering.
 #   siteSearch: string, Specifies all search results should be pages from a given site
-#   siteSearchFilter: string, Controls whether to include or exclude results from the site named in the as_sitesearch parameter
+#   siteSearchFilter: string, Controls whether to include or exclude results from the site named in the as_sitesearch
+#   parameter
 #     Allowed values
 #       e - exclude
 #       i - include

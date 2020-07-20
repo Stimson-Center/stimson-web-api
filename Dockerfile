@@ -6,7 +6,7 @@ RUN apt-get -y update && \
     apt-get -y install build-essential libpoppler-cpp-dev pkg-config python-dev libpoppler-dev systemd pipenv python3-venv uwsgi-plugin-python3
 
 COPY supervisord.conf /etc/supervisor/supervisord.conf
-COPY ./default.conf /etc/nginx/conf.d/default.conf
+# COPY default.conf /etc/nginx/conf.d/default.conf
 
 RUN mkdir -p /app
 COPY bashrc /etc/bash.bashrc
@@ -27,8 +27,7 @@ RUN chown -R nginx:nginx /app && \
     chown -R nginx:nginx /var/log/supervisor && \
     chown -R nginx:nginx /var/run && \
     chown -R nginx:nginx /etc/nginx/conf.d && \
-    chown nginx:nginx /etc/nginx/nginx.conf && \
-    chown nginx:nginx /etc/nginx/conf.d/default.conf
+    chown nginx:nginx /etc/nginx/nginx.conf
 RUN touch /var/run/nginx.pid && \
     chown -R nginx:nginx /var/run/nginx.pid
 

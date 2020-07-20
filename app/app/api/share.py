@@ -6,9 +6,9 @@ from dotenv import load_dotenv
 from flask import request
 from flask_restful import Resource
 
-from scraper.restful.utils import valid_filename
+from .utils import valid_filename
 
-__title__ = 'stimson-web-scraper'
+__title__ = 'stimson-web-api'
 __author__ = 'Alan S. Cooper'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2020, The Stimson Center'
