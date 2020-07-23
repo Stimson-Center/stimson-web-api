@@ -125,6 +125,7 @@ class PDF(Resource):
         pdf.write_section('ARTICLE', article.text)
         pdf.write_section('KEYWORDS', json.dumps(article.keywords))
         pdf.write_section('URL', article.url)
+        pdf.close()
         # get the pdf as an array of bytes
         buffer = pdf.output(dest='S')
         # works perfectly when called via requests in python, fails when called by axios in Javascript
