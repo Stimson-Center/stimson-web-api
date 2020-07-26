@@ -27,7 +27,6 @@ class ArticleProcess(Resource):
         url = request.args.get('url')
         language = request.args.get('language')
         language = language[:2]
-        translate = request.args.get('translate')
         article = ArticleProcess.create_article(url, language)
         return article.get_json(), 200, {'Content-Type': 'application/json'}
 
