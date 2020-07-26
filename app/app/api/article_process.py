@@ -1,6 +1,7 @@
 # https://preslav.me/2019/01/09/dotenv-files-python/
 from flask import request
 from flask_restful import Resource
+from google.cloud import translate_v2
 
 # https://preslav.me/2019/01/09/dotenv-files-python/
 # noinspection PyPackageRequirements
@@ -27,32 +28,22 @@ class ArticleProcess(Resource):
         language = request.args.get('language')
         language = language[:2]
         translate = request.args.get('translate')
-        article = ArticleProcess.create_article(url, language, translate)
+        article = ArticleProcess.create_article(url, language)
         return article.get_json(), 200, {'Content-Type': 'application/json'}
 
     @staticmethod
     def post():
         form = request.get_json()
-        article = ArticleProcess.create_article(form['url'], form['config']['language'], form['config']['translate'])
-        article.set_json(form)
-        if DOWNLOADED not in article.workflow:
-            article.download()
-        elif PARSED not in article.workflow:
-            article.parse()
-        elif NLPED not in article.workflow:
-            article.nlp()
+        article = ArticleProcess.workflow(form)
         return article.get_json(), 200, {'Content-Type': 'application/json'}
 
     @staticmethod
-    def create_article(url, language, translate):
+    def create_article(url, language):
         config = Configuration()
         # initialization runtime configuration
         config.follow_meta_refresh = True
         config.use_meta_language = False
         config.set_language(language)
-        if isinstance(translate, str):
-            translate = translate.lower() == 'true'
-        config.set_translate(translate)
         config.http_success_only = False
         config.ignored_content_types_defaults = {
             # "application/pdf": "%PDF-",
@@ -61,3 +52,19 @@ class ArticleProcess(Resource):
             "application/x-gzpdf": "%PDF-"
         }
         return Article(url, config=config)
+
+    @staticmethod
+    def workflow(form):
+        article = ArticleProcess.create_article(form['url'], form['config']['language'])
+        article.set_json(form)
+        if DOWNLOADED not in article.workflow:
+            article.download()
+        elif PARSED not in article.workflow:
+            article.parse()
+        elif NLPED not in article.workflow:
+            article.nlp()
+        return article
+
+
+
+

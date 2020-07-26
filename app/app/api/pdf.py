@@ -111,7 +111,7 @@ class PDF(Resource):
     @staticmethod
     def post():
         form = request.get_json()
-        article = ArticleProcess.create_article(form['url'], form['config']['language'], form['config']['translate'])
+        article = ArticleProcess.create_article(form['url'], form['config']['language'])
         article.set_json(form)
         pdf = FPDF3()
         pdf.add_font('OpenSans', fname='OpenSans-Regular.ttf')

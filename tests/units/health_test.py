@@ -22,4 +22,6 @@ def test_health(client):
     assert 0 < data['cpu_in_use'] < 100
     assert 0 < data['memory_in_use'] < 100
     assert 0 < data['diskspace_in_use'] < 100
-    assert data['version']
+    assert data['scraper_version']
+    assert data['api_version']
+

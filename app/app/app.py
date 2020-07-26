@@ -12,6 +12,7 @@ from .api.languages import Languages
 from .api.pdf import PDF
 from .api.search import Search
 from .api.share import Share
+from .api.article_translate import ArticleTranslate
 
 __title__ = 'stimson-web-api'
 __author__ = 'Alan S. Cooper'
@@ -49,6 +50,7 @@ def set_api(flask_app):
     api = Api(flask_app)
     api.add_resource(Health, '/')
     api.add_resource(ArticleProcess, '/article')
+    api.add_resource(ArticleTranslate, '/article/translate')
     api.add_resource(Countries, '/countries')
     api.add_resource(FileTypes, '/filetypes')
     api.add_resource(Languages, '/languages')

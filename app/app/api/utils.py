@@ -1,5 +1,7 @@
+import json
 import math
 import string
+import os
 
 
 def valid_filename(filename):
@@ -12,6 +14,12 @@ def truncate(number, digits) -> float:
     return math.trunc(stepper * number) / stepper
 
 
-def senseless_print():
-    # Print something, just to demonstrate how to import modules
-    print("Senseless print")
+def get_google_application_credentials():
+    google_application_credentials_file = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
+    if not google_application_credentials_file:
+        raise Exception("GOOGLE_APPLICATION_CREDENTIALS not found")
+    try:
+        with open(google_application_credentials_file) as f:
+            return json.load(f), google_application_credentials_file
+    except Exception as ex:
+        raise Exception(f"{google_application_credentials_file} not found")
