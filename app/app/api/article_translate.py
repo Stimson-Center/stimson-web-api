@@ -44,7 +44,8 @@ class ArticleTranslate(Resource):
                                                        target_language)
         text = ArticleTranslate.google_translate_text(client, parent, article.text, article.config.language,
                                                       target_language)
-        article.config.set_language = target_language
+        # set the langage, STOP_WORDS for the Natural Language Processing
+        article.config.set_language(target_language)
         article.set_title(title)
         article.set_text(text)
         article.nlp()
