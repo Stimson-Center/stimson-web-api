@@ -40,16 +40,14 @@ class ArticleTranslate(Resource):
         if 'project_id' not in google_application_credentials:
             raise ArticleTranslateException(f"project_if not found in {google_application_credentials_file}")
         parent = client.location_path(google_application_credentials['project_id'], "global")
-        title = ArticleTranslate.google_translate_text(client, parent, article.title, article.config._language,
+        title = ArticleTranslate.google_translate_text(client, parent, article.title, article.config.language,
                                                        target_language)
-        summary = ArticleTranslate.google_translate_text(client, parent, article.summary, article.config._language,
-                                                         target_language)
-        text = ArticleTranslate.google_translate_text(client, parent, article.text, article.config._language,
+        text = ArticleTranslate.google_translate_text(client, parent, article.text, article.config.language,
                                                       target_language)
         article.config.set_language = target_language
         article.set_title(title)
-        article.set_summary(summary)
         article.set_text(text)
+        article.nlp()
         article.set_workflow(TRANSLATED)
         return article.get_json(), 200, {'Content-Type': 'application/json'}
 
