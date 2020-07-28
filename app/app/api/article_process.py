@@ -31,12 +31,6 @@ class ArticleProcess(Resource):
         return article.get_json(), 200, {'Content-Type': 'application/json'}
 
     @staticmethod
-    def post():
-        form = request.get_json()
-        article = ArticleProcess.workflow(form)
-        return article.get_json(), 200, {'Content-Type': 'application/json'}
-
-    @staticmethod
     def create_article(url, language):
         config = Configuration()
         # initialization runtime configuration
@@ -52,17 +46,6 @@ class ArticleProcess(Resource):
         }
         return Article(url, config=config)
 
-    @staticmethod
-    def workflow(form):
-        article = ArticleProcess.create_article(form['url'], form['config']['language'])
-        article.set_json(form)
-        if DOWNLOADED not in article.workflow:
-            article.download()
-        elif PARSED not in article.workflow:
-            article.parse()
-        elif NLPED not in article.workflow:
-            article.nlp()
-        return article
 
 
 
