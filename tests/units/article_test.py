@@ -43,10 +43,16 @@ def test_article_yahoo(client):
     response1 = client.get("/article?url=https://www.yahoo.com&language=en&translate=false")
     response1_data = validate(response1)
     assert len(response1_data) == 15  # returned 15 results on 2020/07/13!
-    payload = response1_data
-    while NLPED not in payload['workflow']:
-        response2 = client.post("/article", json=payload)
-        response2_data = validate(response2)
-        assert len(response2_data) == 15  # returned 15 results on 2020/07/13!
-        payload = response2_data
-    assert len(payload['text'])
+    response2 = client.post("/article/download", json=response1_data)
+    response2_data = validate(response2)
+    assert len(response2_data) == 15  # returned 15 results on 2020/07/13!
+    response3 = client.post("/article/parse", json=response2_data)
+    response3_data = validate(response3)
+    assert len(response3_data) == 15  # returned 15 results on 2020/07/13!
+    response4 = client.post("/article/nlp", json=response3_data)
+    response4_data = validate(response4)
+    assert len(response4_data['title'])
+    assert len(response4_data['authors'])
+    assert len(response4_data['keywords'])
+    assert len(response4_data['summary'])
+    assert len(response4_data['text'])
