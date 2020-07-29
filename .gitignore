@@ -53,12 +53,13 @@ amplify/.config/local-env-info.json
 **/.config/
 **/.bash_profile
 **/nohup.out
-.GOOGLE_APPLICATION_CREDENTIALS.json
+**/.GOOGLE_APPLICATION_CREDENTIALS.json
+**/credentials.json
+**/token.pickle
 
 backend/tests/stimson-web-api.pid
 stimson-web-api.pid
 frontend/.env.local
-tests/fixtures/pdf/2015-09-29 Myawaddy industrial zone set for 2017 opening.en.pdf
 stimson_web_app.egg-info/dependency_links.txt
 stimson_web_app.egg-info/entry_points.txt
 stimson_web_app.egg-info/not-zip-safe
