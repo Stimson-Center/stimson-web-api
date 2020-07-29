@@ -1,7 +1,7 @@
 runtime: custom
 env: flex
 env_variables:
-  BUCKET_NAME: "stimson-gcs-ds-bucket"
+  BUCKET_NAME: "stimson-gcs-datascience-bucket"
   GOOGLE_APPLICATION_CREDENTIALS: "/app/.GOOGLE_APPLICATION_CREDENTIALS.json"
 # https://cloud.google.com/appengine/docs/flexible/python/runtime
 runtime_config:
