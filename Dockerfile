@@ -12,12 +12,14 @@ RUN mkdir -p /app
 COPY bashrc /etc/bash.bashrc
 RUN chmod a+rwx /etc/bash.bashrc
 
+COPY ./app /app
 COPY .env /app/.env
 COPY .GOOGLE_APPLICATION_CREDENTIALS.json /app/.GOOGLE_APPLICATION_CREDENTIALS.json
 ENV GOOGLE_APPLICATION_CREDENTIALS=/app/.GOOGLE_APPLICATION_CREDENTIALS.json
+ENV GOOGLE_DRIVE_CREDENTIALS=/app/credentials.json
 COPY requirements.txt /app/requirements.txt
 COPY prestart.sh /app/prestart.sh
-COPY ./app /app
+
 
 ## add permissions for nginx user
 RUN chown -R nginx:nginx /app && \

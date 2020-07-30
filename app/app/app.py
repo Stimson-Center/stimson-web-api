@@ -1,21 +1,23 @@
-from flask import Flask
 import logging
+
+from flask import Flask
 from flask_cors import CORS
 from flask_restful import Api
 from flask_restful import Resource
 
+from .api.article_download import ArticleDownload
+from .api.article_nlp import ArticleNLP
+from .api.article_parse import ArticleParse
 from .api.article_process import ArticleProcess
+from .api.article_translate import ArticleTranslate
 from .api.countries import Countries
 from .api.file_types import FileTypes
+from .api.google_drive import GoogleDrive
+from .api.google_storage import GoogleStorage
 from .api.health import Health
 from .api.languages import Languages
 from .api.pdf import PDF
 from .api.search import Search
-from .api.share import Share
-from .api.article_download import ArticleDownload
-from .api.article_parse import ArticleParse
-from .api.article_nlp import ArticleNLP
-from .api.article_translate import ArticleTranslate
 
 __title__ = 'stimson-web-api'
 __author__ = 'Alan S. Cooper'
@@ -49,6 +51,7 @@ def set_cors(flask_app):
          supports_credentials=True
          )
 
+
 def set_api(flask_app):
     api = Api(flask_app)
     api.add_resource(Health, '/')
@@ -58,11 +61,13 @@ def set_api(flask_app):
     api.add_resource(ArticleNLP, '/article/nlp')
     api.add_resource(ArticleTranslate, '/article/translate')
     api.add_resource(Countries, '/countries')
+    api.add_resource(GoogleDrive, "/drive")
     api.add_resource(FileTypes, '/filetypes')
+    api.add_resource(GoogleStorage, "/store")
     api.add_resource(Languages, '/languages')
     api.add_resource(PDF, '/pdf')
     api.add_resource(Search, '/search')
-    api.add_resource(Share, '/share')
+
 
 # @app.before_request
 # def authorize_token():

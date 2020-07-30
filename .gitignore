@@ -55,6 +55,7 @@ amplify/.config/local-env-info.json
 **/nohup.out
 **/.GOOGLE_APPLICATION_CREDENTIALS.json
 **/credentials.json
+**/token.ro.pickle
 **/token.pickle
 
 backend/tests/stimson-web-api.pid

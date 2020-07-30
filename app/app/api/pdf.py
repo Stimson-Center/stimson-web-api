@@ -3,8 +3,6 @@ import os
 import re
 import tempfile
 from pathlib import Path
-from io import BytesIO
-
 
 from flask import request, send_file
 from flask_restful import Resource

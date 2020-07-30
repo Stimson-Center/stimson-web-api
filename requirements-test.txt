@@ -1,0 +1,5 @@
+flaky>=3.7.0
+mock>=4.0.2
+pytest>=6.0.0
+pytest-flask>=1.0.0
+requests>=2.24.0
