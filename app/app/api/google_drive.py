@@ -101,8 +101,7 @@ class GoogleDrive(Resource):
         service = create_drive_service()
         metadata = {
             'name': uploaded_file.filename,
-            'mimeType': uploaded_file.mimetype,
-            'parents': [DATASCIENCE_FOLDER_ID]
+            'mimeType': uploaded_file.mimetype
         }
         # the file's contents is already in memory with the file pointer pass to this function
         media = MediaIoBaseUpload(uploaded_file,
@@ -117,6 +116,7 @@ class GoogleDrive(Resource):
                                              fileId=file_id
                                              )
         else:
+            metadata['parents'] = [DATASCIENCE_FOLDER_ID]
             request = service.files().create(body=metadata,
                                              media_body=media,
                                              fields='id'

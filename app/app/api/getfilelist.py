@@ -25,6 +25,8 @@ __author__ = "Kanshi TANAIKE (tanaike@hotmail.com)"
 __copyright__ = "Copyright 2018, Kanshi TANAIKE"
 __license__ = "MIT"
 __version__ = "1.0.5"
+__maintainer__ = "The Stimson Center"
+__maintainer_email = "cooper@pobox.com"
 
 # from apiclient.discovery import build
 # from apiclient.discovery import build as obuild
@@ -35,11 +37,11 @@ import sys
 
 
 def GetFolderTree(resource):
-    return getfilelist(resource).getFolderTree()
+    return getfilelist(resource).get_folder_tree()
 
 
 def GetFileList(resource):
-    return getfilelist(resource).getFileList()
+    return getfilelist(resource).get_file_list()
 
 
 class getfilelist():
@@ -49,12 +51,12 @@ class getfilelist():
         self.id = resource["id"] if "id" in resource.keys() else None
         self.fields = resource["fields"] if "fields" in resource.keys(
         ) else None
-        self.service = self.__getService(resource)
+        self.service = self.__get_service(resource)
         self.e = {}
         self.e["chkAuth"] = self.__checkauth(resource)
         self.__init()
 
-    def __getService(self, resource):
+    def __get_service(self, resource):
         api = 'drive'
         version = 'v3'
         if "oauth2" in resource.keys():
@@ -72,24 +74,24 @@ class getfilelist():
 
 
 
-    def __getList(self, ptoken, q, fields):
+    def __get_list(self, ptoken, q, fields):
         if "driveId" in self.e["searchedFolder"]:
             driveId = self.e["searchedFolder"].get("driveId")
             return self.service.files().list(q=q, fields=fields, orderBy="name", pageSize=1000, pageToken=ptoken or "", includeItemsFromAllDrives=True, supportsAllDrives=True, corpora="drive", driveId=driveId).execute()
         else:
             return self.service.files().list(q=q, fields=fields, orderBy="name", pageSize=1000, pageToken=ptoken or "", includeItemsFromAllDrives=True, supportsAllDrives=True).execute()
 
-    def __getListLoop(self, q, fields, values):
+    def __get_list_loop(self, q, fields, values):
         nextPageToken = ""
         while True:
-            res = self.__getList(nextPageToken, q, fields)
+            res = self.__get_list(nextPageToken, q, fields)
             values.extend(res.get("files"))
             nextPageToken = res.get("nextPageToken")
             if nextPageToken is None:
                 break
         return values
 
-    def __getFilesFromFolder(self, folderTree):
+    def __get_files_from_folder(self, folderTree):
         f = cl.OrderedDict()
         f["searchedFolder"] = self.e["searchedFolder"]
         f["folderTree"] = folderTree
@@ -100,7 +102,7 @@ class getfilelist():
             self.fields += ",nextPageToken"
         for i, e in enumerate(folderTree["folders"]):
             q = "'%s' in parents and mimeType != 'application/vnd.google-apps.folder' and trashed=false" % e
-            fm = self.__getListLoop(q, self.fields, [])
+            fm = self.__get_list_loop(q, self.fields, [])
             fe = {"files": []}
             fe["folderTree"] = folderTree["id"][i]
             fe["files"].extend(fm)
@@ -109,7 +111,7 @@ class getfilelist():
         f["totalNumberOfFiles"] = sum(len(e["files"]) for e in f["fileList"])
         return f
 
-    def __getDlFoldersS(self, searchFolderName, fr):
+    def __get_dl_folders_s(self, searchFolderName, fr):
         fT = cl.OrderedDict()
         fT["id"] = []
         fT["names"] = []
@@ -127,10 +129,10 @@ class getfilelist():
                 fT["names"].append(f["name"])
         return fT
 
-    def __getAllfoldersRecursively(self, idd, parents, folders):
+    def __get_allfolders_recursively(self, idd, parents, folders):
         q = "'%s' in parents and mimeType='application/vnd.google-apps.folder' and trashed=false" % idd
         fields = "files(id,mimeType,name,parents,size),nextPageToken"
-        files = self.__getListLoop(q, fields, [])
+        files = self.__get_list_loop(q, fields, [])
         temp = []
         p = list(parents)
         p.append(idd)
@@ -141,17 +143,17 @@ class getfilelist():
         if len(temp) > 0:
             folders["temp"].append(temp)
             for e in temp:
-                self.__getAllfoldersRecursively(
+                self.__get_allfolders_recursively(
                     e.get("id"), e.get("tree"), folders)
         return folders
 
-    def __getFolderTreeRecursively(self):
+    def __get_folder_tree_recursively(self):
         folderTr = {"search": self.e["searchedFolder"]["id"], "temp": []}
-        value = self.__getAllfoldersRecursively(
+        value = self.__get_allfolders_recursively(
             self.e["searchedFolder"]["id"], [], folderTr)
-        return self.__getDlFoldersS(self.e["searchedFolder"].get("name"), value)
+        return self.__get_dl_folders_s(self.e["searchedFolder"].get("name"), value)
 
-    def __createFolderTreeID(self, fm, idd, parents, fls):
+    def __create_folder_tree_id(self, fm, idd, parents, fls):
         temp = []
         p = list(parents)
         p.append(idd)
@@ -163,24 +165,24 @@ class getfilelist():
         if len(temp) > 0:
             fls["temp"].append(temp)
             for e in temp:
-                self.__createFolderTreeID(fm, e["id"], e["tree"], fls)
+                self.__create_folder_tree_id(fm, e["id"], e["tree"], fls)
         return fls
 
-    def __getFromAllFolders(self):
+    def __get_from_all_folders(self):
         q = "mimeType='application/vnd.google-apps.folder' and trashed=false"
         fields = "files(id,mimeType,name,parents,size),nextPageToken"
-        files = self.__getListLoop(q, fields, [])
+        files = self.__get_list_loop(q, fields, [])
         tr = {"search": self.e["searchedFolder"]["id"], "temp": []}
-        value = self.__createFolderTreeID(
+        value = self.__create_folder_tree_id(
             files, self.e["searchedFolder"]["id"], [], tr)
-        return self.__getDlFoldersS(self.e["searchedFolder"]["name"], value)
+        return self.__get_dl_folders_s(self.e["searchedFolder"]["name"], value)
 
     def __checkauth(self, resource):
         if "oauth2" in resource.keys() or "service_account" in resource.keys():
             return True
         return False
 
-    def __getFileInf(self):
+    def __get_file_inf(self):
         fields = "createdTime,id,mimeType,modifiedTime,name,owners,parents,shared,webContentLink,webViewLink,driveId"
         return self.service.files().get(fileId=self.id, fields=fields, supportsAllDrives=True).execute()
 
@@ -195,7 +197,7 @@ class getfilelist():
                 sys.exit(1)
         self.id = "root" if self.e["rootId"] else self.id
         try:
-            self.e["searchedFolder"] = self.__getFileInf()
+            self.e["searchedFolder"] = self.__get_file_inf()
         except googleapiclient.errors.HttpError:
             print("Error: Folder ID of '%s' cannot be retrieved. Please confirm whether the folder ID is existing, or the owner of file is that of account. If you want to retrieve other user's folder, please check whether the folder is shared." % self.id)
             sys.exit(1)
@@ -203,12 +205,12 @@ class getfilelist():
                             ) and not self.e["searchedFolder"].get("shared")
         return
 
-    def getFileList(self):
+    def get_file_list(self):
         """This is a method for retrieving file list."""
-        folderTree = self.__getFromAllFolders(
-        ) if self.e["method"] else self.__getFolderTreeRecursively()
-        return self.__getFilesFromFolder(folderTree)
+        folderTree = self.__get_from_all_folders(
+        ) if self.e["method"] else self.__get_folder_tree_recursively()
+        return self.__get_files_from_folder(folderTree)
 
-    def getFolderTree(self):
+    def get_folder_tree(self):
         """This is a method for retrieving folder tree."""
-        return self.__getFromAllFolders() if self.e["method"] else self.__getFolderTreeRecursively()
+        return self.__get_from_all_folders() if self.e["method"] else self.__get_folder_tree_recursively()
