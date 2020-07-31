@@ -5,6 +5,7 @@
 **/.env
 .env
 .env.bak
+
 **/.venv
 .idea/
 *.swp
