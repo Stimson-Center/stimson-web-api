@@ -14,7 +14,6 @@ RUN chmod a+rwx /etc/bash.bashrc
 
 COPY ./app /app
 COPY .env /app/.env
-COPY .GOOGLE_APPLICATION_CREDENTIALS.json /app/.GOOGLE_APPLICATION_CREDENTIALS.json
 ENV GOOGLE_APPLICATION_CREDENTIALS=/app/.GOOGLE_APPLICATION_CREDENTIALS.json
 ENV GOOGLE_DRIVE_CREDENTIALS=/app/credentials.json
 COPY requirements.txt /app/requirements.txt
