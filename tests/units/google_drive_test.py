@@ -36,7 +36,6 @@ def test_google_drive_store_file(fixture_directory, client):
 
 
 def test_list_google_drive_files():
-    response = list_drive_folder_files(DATASCIENCE_FOLDER_ID)
     results = list_drive_folder_files(DATASCIENCE_FOLDER_ID)
     for files in results['fileList']:
         for file in files['files']:

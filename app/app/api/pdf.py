@@ -2,6 +2,7 @@ import json
 import os
 import re
 import tempfile
+import io
 from pathlib import Path
 
 from flask import request, send_file
@@ -10,6 +11,8 @@ from fpdf import FPDF
 from fpdf.ttfonts import TTFontFile
 
 from .article_process import ArticleProcess
+from .google_drive import save_file_to_google_drive
+from .utils import get_file_storage
 
 __title__ = 'stimson-web-api'
 __author__ = 'Alan S. Cooper'
@@ -126,12 +129,23 @@ class PDF(Resource):
         pdf.close()
         # get the pdf as an array of bytes
         buffer = pdf.output(dest='S')
-        # works perfectly when called via requests in python, fails when called by axios in Javascript
-        # return send_file(BytesIO(buffer), mimetype='application/pdf')
+        # '/var/folders/g9/93n9wtsd3g7fjkh63dm2n57c0000gp/T/tmprb_xp4at.json'
+        fp = tempfile.NamedTemporaryFile(suffix='.json')
+        x = json.dumps(article.get_json(), indent=4, sort_keys=True)
+        fp.write(x.encode())
+        fp.flush()
+        fp.seek(0)
+        filename = f'{article.publish_date} {article.title}.{article.config.get_language()}.json'
+        save_file_to_google_drive(get_file_storage(fp, filename))
+        fp.close()
+
         # '/var/folders/g9/93n9wtsd3g7fjkh63dm2n57c0000gp/T/tmprb_xp4at.pdf'
         fp = tempfile.NamedTemporaryFile(suffix='.pdf')
         fp.write(buffer)
         fp.flush()
+        fp.seek(0)
+        filename = f'{article.publish_date} {article.title}.{article.config.get_language()}.pdf'
+        save_file_to_google_drive(get_file_storage(fp, filename))
         fp.seek(0)
         return send_file(
             filename_or_fp=fp,

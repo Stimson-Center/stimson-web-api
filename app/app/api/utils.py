@@ -2,6 +2,7 @@ import json
 import math
 import string
 import os
+from werkzeug.datastructures import FileStorage
 
 
 def valid_filename(filename):
@@ -23,3 +24,9 @@ def get_google_application_credentials():
             return json.load(f), google_application_credentials_file
     except Exception as ex:
         raise Exception(f"{google_application_credentials_file} not found")
+
+
+def get_file_storage(fp, filename):
+    filestorage =  FileStorage(fp)
+    filestorage.filename = filename
+    return filestorage

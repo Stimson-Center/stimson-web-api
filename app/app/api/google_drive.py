@@ -21,6 +21,7 @@ import pickle
 
 from dotenv import load_dotenv
 from flask_restful import Resource
+from flask import request
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
@@ -85,50 +86,50 @@ def list_drive_folder_files(folder_id):
     return GetFileList(resource)
 
 
+def save_file_to_google_drive(filestorage):
+    # Create a Google Drive client.
+    service = create_drive_service()
+    metadata = {
+        'name': filestorage.filename,
+        'mimeType': filestorage.mimetype
+    }
+    # the file's contents is already in memory with the file pointer pass to this function
+    media = MediaIoBaseUpload(filestorage,
+                              chunksize=1024 * 1024,
+                              mimetype=filestorage.mimetype,
+                              resumable=True
+                              )
+    file_id = GoogleDrive.file_exists(filestorage.filename)
+    if file_id:
+        request = service.files().update(body=metadata,
+                                         media_body=media,
+                                         fileId=file_id
+                                         )
+    else:
+        metadata['parents'] = [DATASCIENCE_FOLDER_ID]
+        request = service.files().create(body=metadata,
+                                         media_body=media,
+                                         fields='id'
+                                         )
+    response = None
+    while response is None:
+        status, response = request.next_chunk()
+        if status:
+            print("Uploaded %d%%." % int(status.progress() * 100))
+    return response
+
+
 # https://developers.google.com/drive/api/v3/manage-uploads#python
 class GoogleDrive(Resource):
     @staticmethod
     def post():
-        from flask import request
-
         """Process the uploaded file and upload it to Google Cloud Storage."""
         uploaded_file = request.files.get('file')
-
         if not uploaded_file:
             return 'No file uploaded.', 400
-
-        # Create a Google Drive client.
-        service = create_drive_service()
-        metadata = {
-            'name': uploaded_file.filename,
-            'mimeType': uploaded_file.mimetype
-        }
-        # the file's contents is already in memory with the file pointer pass to this function
-        media = MediaIoBaseUpload(uploaded_file,
-                                  chunksize=1024 * 1024,
-                                  mimetype=uploaded_file.mimetype,
-                                  resumable=True
-                                  )
-        file_id = GoogleDrive.file_exists(uploaded_file.filename)
-        if file_id:
-            request = service.files().update(body=metadata,
-                                             media_body=media,
-                                             fileId=file_id
-                                             )
-        else:
-            metadata['parents'] = [DATASCIENCE_FOLDER_ID]
-            request = service.files().create(body=metadata,
-                                             media_body=media,
-                                             fields='id'
-        )
-        response = None
-        while response is None:
-            status, response = request.next_chunk()
-            if status:
-                print("Uploaded %d%%." % int(status.progress() * 100))
-
+        response = save_file_to_google_drive(uploaded_file)
         # The public URL can be used to directly access the uploaded file via HTTP.
-        return response['id'], 200, {'Content-Type': 'application/json'}
+        return response, 200, {'Content-Type': 'application/json'}
 
     @staticmethod
     def file_exists(filename):
