@@ -27,6 +27,6 @@ automatic_scaling:
     target_utilization: 0.7
   target_concurrent_requests: 10
 resources:
-  cpu: 2
-  memory_gb: 8.0
-  disk_size_gb: 10
+  cpu: 1
+  memory_gb: 6.0
+  disk_size_gb: 12

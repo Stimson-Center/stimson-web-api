@@ -3,8 +3,7 @@ FROM tiangolo/uwsgi-nginx-flask:python3.8
 RUN mkhomedir_helper nginx
 
 RUN apt-get -y update && \
-    apt-get -y install build-essential pkg-config python-dev python-setuptools systemd pipenv python3-venv uwsgi-plugin-python3
-
+apt-get -y install build-essential libpoppler-cpp-dev pkg-config python-dev python-setuptools libpoppler-dev systemd pipenv python3-venv uwsgi-plugin-python3
 COPY supervisord.conf /etc/supervisor/supervisord.conf
 # COPY default.conf /etc/nginx/conf.d/default.conf
 
