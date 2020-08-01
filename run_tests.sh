@@ -24,4 +24,3 @@ python3 -m venv .venv
  . .venv/bin/activate && python3 -m spacy download ro_core_news_sm # Romanian
  . .venv/bin/activate && python3 -m spacy download es_core_news_sm # Spanish
  . .venv/bin/activate && py.test --verbose
- . .venv/bin/activate
