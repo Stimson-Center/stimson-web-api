@@ -20,12 +20,12 @@ from app.app.api.google_drive import list_drive_folder_files, DATASCIENCE_FOLDER
 
 @pytest.mark.options(debug=True)
 def test_google_drive_store_file(fixture_directory, client):
-    test_driver_file = os.path.join(fixture_directory, "txt", "TEST_PLACEHOLDER.txt")
+    test_driver_file = os.path.join(fixture_directory, "txt", "DO_NOT_DELETE.txt")
     with open(test_driver_file) as fp:
         payload = fp.read()
     # https://stackoverflow.com/questions/35684436/testing-file-uploads-in-flask
     data = dict(
-        file=(io.BytesIO(payload.encode()), "TEST_PLACEHOLDER.txt"),
+        file=(io.BytesIO(payload.encode()), "DO_NOT_DELETE.txt"),
     )
     response = client.post("/drive", content_type='multipart/form-data', data=data)
 
