@@ -24,7 +24,7 @@ from app.app.api.google_storage import implicit, explicit, explicit_compute_engi
 
 
 
-@pytest.mark.options(debug=True)
+@pytest.mark.skip(reason="Running this test updates Google Drive")
 def test_google_cloud_store_file(fixture_directory, client):
     test_driver_file = os.path.join(fixture_directory, "txt", "DO_NOT_DELETE.txt")
     with open(test_driver_file) as fp:
