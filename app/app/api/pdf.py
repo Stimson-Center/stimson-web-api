@@ -2,7 +2,6 @@ import json
 import os
 import re
 import tempfile
-import io
 from pathlib import Path
 
 from flask import request, send_file

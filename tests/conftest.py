@@ -1,7 +1,7 @@
 import logging
 import pytest
 from flask import Flask
-from app.app.app import set_cors, set_api
+from app.app.application import set_cors, set_api
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)

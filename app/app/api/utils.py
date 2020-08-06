@@ -19,6 +19,7 @@ def get_google_application_credentials():
     google_application_credentials_file = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
     if not google_application_credentials_file:
         raise Exception("GOOGLE_APPLICATION_CREDENTIALS not found")
+    # noinspection PyUnusedLocal
     try:
         with open(google_application_credentials_file) as f:
             return json.load(f), google_application_credentials_file
