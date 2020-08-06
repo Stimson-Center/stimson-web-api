@@ -44,7 +44,7 @@ def GetFileList(resource):
     return getfilelist(resource).get_file_list()
 
 
-class getfilelist():
+class getfilelist:
     """This is a base class of getfilelistpy."""
 
     def __init__(self, resource):
@@ -52,11 +52,11 @@ class getfilelist():
         self.fields = resource["fields"] if "fields" in resource.keys(
         ) else None
         self.service = self.__get_service(resource)
-        self.e = {}
-        self.e["chkAuth"] = self.__checkauth(resource)
+        self.e = {"chkAuth": self.__checkauth(resource)}
         self.__init()
 
-    def __get_service(self, resource):
+    @staticmethod
+    def __get_service(resource):
         api = 'drive'
         version = 'v3'
         if "oauth2" in resource.keys():
@@ -103,15 +103,15 @@ class getfilelist():
         for i, e in enumerate(folderTree["folders"]):
             q = "'%s' in parents and mimeType != 'application/vnd.google-apps.folder' and trashed=false" % e
             fm = self.__get_list_loop(q, self.fields, [])
-            fe = {"files": []}
-            fe["folderTree"] = folderTree["id"][i]
+            fe = {"files": [], "folderTree": folderTree["id"][i]}
             fe["files"].extend(fm)
             f["fileList"].append(fe)
         f["totalNumberOfFolders"] = len(f["folderTree"]["folders"])
         f["totalNumberOfFiles"] = sum(len(e["files"]) for e in f["fileList"])
         return f
 
-    def __get_dl_folders_s(self, searchFolderName, fr):
+    @staticmethod
+    def __get_dl_folders_s(searchFolderName, fr):
         fT = cl.OrderedDict()
         fT["id"] = []
         fT["names"] = []
@@ -177,7 +177,8 @@ class getfilelist():
             files, self.e["searchedFolder"]["id"], [], tr)
         return self.__get_dl_folders_s(self.e["searchedFolder"]["name"], value)
 
-    def __checkauth(self, resource):
+    @staticmethod
+    def __checkauth(resource):
         if "oauth2" in resource.keys() or "service_account" in resource.keys():
             return True
         return False
