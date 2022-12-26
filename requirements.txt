@@ -15,4 +15,4 @@ python-dotenv==0.14.0
 spacy==2.3.2
 stimson-web-scraper==0.0.63
 waitress==1.4.4
-wheel==0.34.2
+wheel==0.38.1
